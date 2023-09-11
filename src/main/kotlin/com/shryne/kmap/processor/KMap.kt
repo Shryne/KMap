@@ -14,6 +14,7 @@ typealias AMapPartner = com.shryne.kmap.annotations.MapPartner
  * A decorator for [KMap] to create the assignments for the annotated property.
  * Note that this class can be used both ways: annotated property -> property
  * and property -> annotated property.
+ *
  * @param sourceProperty The property that contains the value.
  * @param sourceClass The class of the source property.
  * @param targetClass The class of the target property that will get the value.
