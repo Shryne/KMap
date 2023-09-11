@@ -6,7 +6,7 @@
 
     <artifactId>kmap</artifactId>
     <groupId>com.shryne</groupId>
-    <version>0.1</version>
+    <version>0.1-SNAPSHOT</version>
 
     <name>KMap</name>
 
@@ -48,7 +48,7 @@
             <groupId>com.squareup</groupId>
             <artifactId>kotlinpoet</artifactId>
             <version>${kotlinpoet.version}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.github.tschuchortdev</groupId>
@@ -122,8 +122,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>15</source>
-                    <target>15</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
         </plugins>

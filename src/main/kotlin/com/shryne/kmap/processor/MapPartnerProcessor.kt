@@ -86,6 +86,6 @@ internal class MapPartnerProcessor : AbstractProcessor() {
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {
-        return SourceVersion.RELEASE_15
+        return SourceVersion.RELEASE_17
     }
 }
