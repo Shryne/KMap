@@ -1,7 +1,7 @@
 package com.shryne.kmap.processor
 
 import com.shryne.kmap.annotations.KMap
-import org.jetbrains.kotlin.util.capitalizeDecapitalize.decapitalizeAsciiOnly
+import java.util.*
 import javax.annotation.processing.Messager
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -55,8 +55,11 @@ internal class KMap(
     private val propertyName: String =
         sourceProperty.simpleName.toString().run {
             if (sourceProperty.kind == ElementKind.METHOD) {
-                removeSuffix("\$annotations").removePrefix("get")
-                    .decapitalizeAsciiOnly()
+                removeSuffix("\$annotations")
+                    .removePrefix("get")
+                    .replaceFirstChar {
+                        it.lowercase(Locale.getDefault())
+                    }
             } else {
                 this
             }
