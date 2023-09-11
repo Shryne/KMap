@@ -21,7 +21,9 @@ class BasicTest {
                 Kotlin("Target")
             ),
             emptyList(),
-            "No such property: y"
+            "Couldn't find targetProperty in " +
+                "basic.error.no_such_property.Target. Enclosed elements are: "
+                + "a. Expected name was: x."
         )
     }
 
@@ -34,7 +36,8 @@ class BasicTest {
                 Kotlin("Target")
             ),
             emptyList(),
-            "The given source property must be annotated with KMap."
+            "KMap.thisValue is redundant when KMap.thisGet and " +
+                "KMap.thisSet are set."
         )
     }
 }

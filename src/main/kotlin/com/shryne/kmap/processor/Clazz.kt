@@ -2,6 +2,7 @@ package com.shryne.kmap.processor
 
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
+import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 
 /**
@@ -20,4 +21,10 @@ internal class Clazz(private val source: TypeElement) {
      * The fully qualified name (with the package) of the class as a [TypeName].
      */
     val name: TypeName = source.asClassName()
+
+    val properties: List<Element> = source.enclosedElements.filter {
+        it.kind.isField
+    }
+
+    override fun toString(): String = source.qualifiedName.toString()
 }

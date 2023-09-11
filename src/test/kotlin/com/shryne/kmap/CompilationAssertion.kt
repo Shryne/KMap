@@ -198,13 +198,13 @@ fun assertMappingFiles(
  * @param sources The source files that are annotated with [MapPartner].
  * @param nonMappingSources The source files that are not annotated with
  * [MapPartner].
- * @param errorMessage The error message that is expected.
+ * @param errorMessages The error messages that are expected.
  */
 fun assertError(
     sourceFolder: String,
     sources: Iterable<Source>,
     nonMappingSources: Iterable<Source> = emptyList(),
-    errorMessage: String
+    vararg errorMessages: String
 ) {
     val result = KotlinCompilation().also {
         it.sources = (sources + nonMappingSources).map {
@@ -218,5 +218,5 @@ fun assertError(
     }.compile()
 
     assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, result.exitCode)
-    assertContains(result.messages, errorMessage)
+    errorMessages.forEach { assertContains(result.messages, it) }
 }

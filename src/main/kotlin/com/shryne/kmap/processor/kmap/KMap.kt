@@ -21,7 +21,7 @@ typealias AMapPartner = com.shryne.kmap.annotations.MapPartner
  * @param types The utility class necessary to operate on Types.
  */
 internal class KMap(
-    private val sourceProperty: Element,
+    val sourceProperty: Element,
     private val sourceClass: Element,
     private val targetClass: Element,
     private val types: Types,
@@ -37,9 +37,6 @@ internal class KMap(
                 Diagnostic.Kind.NOTE,
                 "Source property is: $sourceProperty"
             )
-            requireNotNull(this) {
-                "The given source property must be annotated with KMap."
-            }
         }
 
     private val propertyName: String =
@@ -62,7 +59,7 @@ internal class KMap(
         kMap.thisSet
     )
 
-    private val sourceSet: String = propertyAccessName(
+    val sourceSet: String = propertyAccessName(
         propertyName,
         kMap.thisValue,
         kMap.thisSet,
@@ -84,6 +81,7 @@ internal class KMap(
     /**
      * The name of the property that will be used to access the value of the
      * source property.
+     *
      * @param propertyName The name of the property.
      * @param annotationValue The value of the annotation.
      * @param annotationGet The getter value of the annotation.
@@ -126,21 +124,9 @@ internal class KMap(
 
     private val targetProperty: Element
         get() {
-            val result = targetClass.enclosedElements.find {
+            return targetClass.enclosedElements.find {
                 it.simpleName.toString() == sourceSet
-            }
-            if (result == null) {
-                messager.printMessage(
-                    Diagnostic.Kind.ERROR,
-                    "Couldn't find targetProperty in $targetClass. Enclosed " +
-                        "elements are: " +
-                        "${targetClass.enclosedElements.joinToString(", ")}. " +
-                        "Expected name was: $sourceSet.",
-                    targetClass
-                )
-                throw IllegalStateException("Target property not found.")
-            }
-            return result!!
+            }!!
         }
 
     /**

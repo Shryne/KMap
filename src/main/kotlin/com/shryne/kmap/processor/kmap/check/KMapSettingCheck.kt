@@ -5,7 +5,13 @@ import javax.annotation.processing.Messager
 import javax.lang.model.element.Element
 import javax.tools.Diagnostic
 
-class KMapSettingCheck(private val sourceProperty: Element) {
+/**
+ * Checks if the [KMap] annotation on the given [sourceProperty] is set
+ * correctly.
+ *
+ * @param sourceProperty The property that is annotated with [KMap].
+ */
+internal class KMapSettingCheck(private val sourceProperty: Element) : Check {
     private val errors by lazy {
         val errors = mutableListOf<String>()
         val annotation = sourceProperty.getAnnotation(KMap::class.java)
@@ -30,9 +36,9 @@ class KMapSettingCheck(private val sourceProperty: Element) {
         errors
     }
 
-    fun hasErrors(): Boolean = errors.isNotEmpty()
+    override fun hasErrors(): Boolean = errors.isNotEmpty()
 
-    fun printErrors(messager: Messager) {
+    override fun printErrors(messager: Messager) {
         errors.forEach { messager.printMessage(Diagnostic.Kind.ERROR, it, sourceProperty) }
     }
 }
