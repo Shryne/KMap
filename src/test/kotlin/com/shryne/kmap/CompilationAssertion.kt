@@ -8,6 +8,7 @@ import com.tschuchort.compiletesting.SourceFile
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.io.File
+import kotlin.test.assertContains
 
 /**
  * The source file. That is the file that is currently processed and is
@@ -188,4 +189,37 @@ fun assertMappingFiles(
             "$file couldn't be found."
         )
     }
+}
+
+/**
+ * Asserts that the generated mapping files are correct. This method will
+ * compile the sources and assert that the generated mapping files are the same
+ * as the expected mapping files. The expected mapping files are the files
+ * located in the resources folder next to the source files.
+ *
+ * @param sourceFolder The folder where the source files are located.
+ * @param sourceMapFiles The names of the expected mapping files.
+ * @param sources The source files that are annotated with [MapPartner].
+ * @param nonMappingSources The source files that are not annotated with
+ * [MapPartner]
+ */
+fun assertError(
+    sourceFolder: String,
+    sources: Iterable<Source>,
+    nonMappingSources: Iterable<Source> = emptyList(),
+    errorMessage: String
+) {
+    val result = KotlinCompilation().also {
+        it.sources = (sources + nonMappingSources).map {
+            SourceFile.fromPath(
+                fileFromResources("$sourceFolder/${it.fileName}")
+            )
+        }
+        it.annotationProcessors = listOf(MapPartnerProcessor())
+        it.inheritClassPath = true
+        it.messageOutputStream = System.out
+    }.compile()
+
+    assertEquals(KotlinCompilation.ExitCode.COMPILATION_ERROR, result.exitCode)
+    assertContains(result.messages, errorMessage)
 }

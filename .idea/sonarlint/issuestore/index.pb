@@ -24,3 +24,7 @@ h
 8src/main/kotlin/com/shryne/kmap/processor/MapFunction.kt,a/d/ad31de9dba8b199de7d5893220506a6c3c0e4a2a
 g
 7src/main/kotlin/com/shryne/kmap/processor/MapPartner.kt,9/1/91c3b63b09b65555d9ed1d2352e461c744ee89df
+\
+,.idea/inspectionProfiles/Project_Default.xml,4/9/496a238a6afa168dbaf6efd37bb459331589579c
+S
+#.idea/sonarlint/issuestore/index.pb,9/f/9fe84ebb15faf917b7def6236dba604453cc61e0

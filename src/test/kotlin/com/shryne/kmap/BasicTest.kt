@@ -11,4 +11,13 @@ class BasicTest {
             Kotlin("Value")
         )
     }
+
+    @Test
+    fun noSuchProperty() {
+        assertMappingFiles(
+            "/basic/no_such_property",
+            Kotlin("Source"),
+            Kotlin("Target")
+        )
+    }
 }
