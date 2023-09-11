@@ -1,5 +1,6 @@
 package com.shryne.kmap.processor
 
+import com.shryne.kmap.processor.kmap.KMap
 import com.squareup.kotlinpoet.FileSpec
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager

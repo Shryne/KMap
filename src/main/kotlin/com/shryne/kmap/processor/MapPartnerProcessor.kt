@@ -1,5 +1,7 @@
 package com.shryne.kmap.processor
 
+import com.shryne.kmap.processor.kmap.KMap
+import com.shryne.kmap.processor.kmap.check.KMapSettingCheck
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
@@ -52,24 +54,30 @@ internal class MapPartnerProcessor : AbstractProcessor() {
                                         Diagnostic.Kind.NOTE,
                                         "Target type is: ${target.simpleName}. Source type is ${source.simpleName}."
                                     )
-                                    MapPartner(
-                                        processingEnv.typeUtils,
-                                        Clazz(source as TypeElement),
-                                        Clazz(target),
-                                        source.enclosedElements.filter {
-                                            it.getAnnotation(KMapAnnotation::class.java) != null
-                                        }.map {
-                                            KMap(
-                                                it,
-                                                source,
-                                                target,
-                                                processingEnv.typeUtils,
-                                                processingEnv.messager
-                                            )
-                                        },
-                                        packageName,
-                                        processingEnv.messager
-                                    ).writeTo(processingEnv.filer)
+
+                                    val check = KMapSettingCheck(source)
+                                    if (check.hasErrors()) {
+                                        check.printErrors(processingEnv.messager)
+                                    } else {
+                                        MapPartner(
+                                            processingEnv.typeUtils,
+                                            Clazz(source as TypeElement),
+                                            Clazz(target),
+                                            source.enclosedElements.filter {
+                                                it.getAnnotation(KMapAnnotation::class.java) != null
+                                            }.map {
+                                                KMap(
+                                                    it,
+                                                    source,
+                                                    target,
+                                                    processingEnv.typeUtils,
+                                                    processingEnv.messager
+                                                )
+                                            },
+                                            packageName,
+                                            processingEnv.messager
+                                        ).writeTo(processingEnv.filer)
+                                    }
                                 }
                             }
                         }

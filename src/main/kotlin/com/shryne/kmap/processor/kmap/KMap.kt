@@ -1,4 +1,4 @@
-package com.shryne.kmap.processor
+package com.shryne.kmap.processor.kmap
 
 import com.shryne.kmap.annotations.KMap
 import java.util.*
@@ -39,16 +39,6 @@ internal class KMap(
             )
             requireNotNull(this) {
                 "The given source property must be annotated with KMap."
-            }
-            if (thisValue != "") {
-                require(!((thisGet != "") and (thisSet != ""))) {
-                    "KMap.thisValue is redundant when KMap.thisGet and " +
-                        "KMap.thisSet are set."
-                }
-            }
-            require(value == "" || targetGet == "" || targetSet == "") {
-                "KMap.value is redundant when KMap.othersGet and " +
-                    "KMap.othersSet are set."
             }
         }
 
@@ -148,6 +138,7 @@ internal class KMap(
                         "Expected name was: $sourceSet.",
                     targetClass
                 )
+                throw IllegalStateException("Target property not found.")
             }
             return result!!
         }

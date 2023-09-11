@@ -140,7 +140,7 @@ fun assertMappingFiles(
  * @param sourceMapFiles The names of the expected mapping files.
  * @param sources The source files that are annotated with [MapPartner].
  * @param nonMappingSources The source files that are not annotated with
- * [MapPartner]
+ * [MapPartner].
  */
 fun assertMappingFiles(
     sourceFolder: String,
@@ -192,16 +192,13 @@ fun assertMappingFiles(
 }
 
 /**
- * Asserts that the generated mapping files are correct. This method will
- * compile the sources and assert that the generated mapping files are the same
- * as the expected mapping files. The expected mapping files are the files
- * located in the resources folder next to the source files.
+ * Asserts that the compilation fails with the given error message.
  *
  * @param sourceFolder The folder where the source files are located.
- * @param sourceMapFiles The names of the expected mapping files.
  * @param sources The source files that are annotated with [MapPartner].
  * @param nonMappingSources The source files that are not annotated with
- * [MapPartner]
+ * [MapPartner].
+ * @param errorMessage The error message that is expected.
  */
 fun assertError(
     sourceFolder: String,
