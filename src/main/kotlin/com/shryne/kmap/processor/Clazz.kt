@@ -10,7 +10,7 @@ import javax.lang.model.element.TypeElement
  *
  * @param source The [TypeElement] that represents the class.
  */
-class Clazz(private val source: TypeElement) {
+internal class Clazz(private val source: TypeElement) {
     /**
      * The simple name (without the package) of the class.
      */

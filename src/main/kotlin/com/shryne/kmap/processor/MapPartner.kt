@@ -8,7 +8,7 @@ import javax.lang.model.util.Types
 /**
  *
  */
-class MapPartner(
+internal class MapPartner(
     private val types: Types,
     private val source: Clazz,
     private val target: Clazz,

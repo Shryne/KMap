@@ -18,7 +18,7 @@ import javax.lang.model.element.TypeElement
  * @param statements The statements of the mapping.
  * Example: `it.firstName = firstName`
  */
-class MapFunction(
+internal class MapFunction(
     private val source: Clazz,
     private val target: Clazz,
     private val statements: Iterable<String>,

@@ -19,7 +19,7 @@ typealias AMapPartner = com.shryne.kmap.annotations.MapPartner
  * @param targetClass The class of the target property that will get the value.
  * @param types The utility class necessary to operate on Types.
  */
-class KMap(
+internal class KMap(
     private val sourceProperty: Element,
     private val sourceClass: Element,
     private val targetClass: Element,

@@ -14,7 +14,7 @@ typealias KMapAnnotation = com.shryne.kmap.annotations.KMap
 /**
  * Processor for [MapPartner].
  */
-class MapPartnerProcessor : AbstractProcessor() {
+internal class MapPartnerProcessor : AbstractProcessor() {
     override fun process(
         annotations: MutableSet<out TypeElement>,
         roundEnv: RoundEnvironment
