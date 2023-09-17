@@ -1,6 +1,7 @@
 package com.shryne.kmap.processor
 
 import com.shryne.kmap.processor.kmap.KMap
+import com.shryne.kmap.processor.kmap.check.Checks
 import com.shryne.kmap.processor.kmap.check.KMapSettingCheck
 import com.shryne.kmap.processor.kmap.check.PropertyExistCheck
 import javax.annotation.processing.AbstractProcessor
@@ -57,9 +58,11 @@ internal class MapPartnerProcessor : AbstractProcessor() {
                                         "Target type is: ${target.simpleName}. Source type is ${source.simpleName}."
                                     )
 
-                                    val annotated = source.enclosedElements.filter {
-                                        it.getAnnotation(KMapAnnotation::class.java) != null
-                                    }
+                                    val annotated =
+                                        source.enclosedElements.filter {
+                                            it.getAnnotation(KMapAnnotation::class.java) != null
+                                        }
+
                                     val kMaps = annotated.map {
                                         KMap(
                                             it,
@@ -69,21 +72,23 @@ internal class MapPartnerProcessor : AbstractProcessor() {
                                         )
                                     }
 
-                                    val checks = annotated.map {
-                                        KMapSettingCheck(it)
-                                    } + kMaps.map {
-                                        PropertyExistCheck(
-                                            it.sourceProperty,
-                                            Clazz(target),
-                                            it
-                                        )
-                                    }
-                                    if (checks.any { it.hasErrors() }) {
-                                        checks.forEach {
-                                            if (it.hasErrors()) {
-                                                it.printErrors(processingEnv.messager)
-                                            }
+                                    val checks = Checks(
+                                        kMaps.flatMap {
+                                            listOf(
+                                                KMapSettingCheck(
+                                                    it.sourceProperty
+                                                ),
+                                                PropertyExistCheck(
+                                                    it,
+                                                    Clazz(target)
+                                                )
+                                            )
                                         }
+                                    )
+                                    if (checks.hasErrors()) {
+                                        checks.printErrors(
+                                            processingEnv.messager
+                                        )
                                     } else {
                                         MapPartner(
                                             processingEnv.typeUtils,

@@ -12,13 +12,12 @@ typealias KMapAnnotation = com.shryne.kmap.annotations.KMap
  * Checks if the property that is given through [KMapAnnotation.value] exists.
  */
 internal class PropertyExistCheck(
-    private val sourceProperty: Element,
-    private val targetClass: Clazz,
-    private val kMap: KMap
+    private val kMap: KMap,
+    private val targetClass: Clazz
 ) : Check {
     private val errors by lazy {
         val errors = mutableListOf<String>()
-        val annotation = sourceProperty.getAnnotation(KMapAnnotation::class.java)
+        val annotation = kMap.sourceProperty.getAnnotation(KMapAnnotation::class.java)
         if (annotation == null) {
             errors.add("The given source property must be annotated with KMap.")
         } else {
@@ -42,7 +41,11 @@ internal class PropertyExistCheck(
 
     override fun printErrors(messager: Messager) {
         errors.forEach {
-            messager.printMessage(Diagnostic.Kind.ERROR, it, sourceProperty)
+            messager.printMessage(
+                Diagnostic.Kind.ERROR,
+                it,
+                kMap.sourceProperty
+            )
         }
     }
 }

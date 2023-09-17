@@ -14,8 +14,6 @@ g
 7src/test/kotlin/com/shryne/kmap/CompilationAssertion.kt,4/3/43816c680e6c67ce3aed8a923db9057fa8e484e2
 p
 @src/main/kotlin/com/shryne/kmap/processor/MapPartnerProcessor.kt,a/5/a5dc0f7944da4bba9b0c1fe1c99b623ebff13f97
-a
-1src/main/kotlin/com/shryne/kmap/processor/KMap.kt,8/6/8622236ed2ff6b5d22c24cbcd41c4ed7be7d8372
 7
 pom.xml,4/4/442292b8a7efeabbe4cc176709b833b1792140ec
 b
@@ -28,3 +26,11 @@ g
 ,.idea/inspectionProfiles/Project_Default.xml,4/9/496a238a6afa168dbaf6efd37bb459331589579c
 S
 #.idea/sonarlint/issuestore/index.pb,9/f/9fe84ebb15faf917b7def6236dba604453cc61e0
+f
+6src/main/kotlin/com/shryne/kmap/processor/kmap/KMap.kt,2/d/2d321362807035520a53acf5a278ad33678cbc4a
+x
+Hsrc/main/kotlin/com/shryne/kmap/processor/kmap/check/KMapSettingCheck.kt,5/6/5658aaf7fa1a461c515f931dbbbfca12981bd592
+z
+Jsrc/main/kotlin/com/shryne/kmap/processor/kmap/check/PropertyExistCheck.kt,d/3/d388d42cd3af64644c21d8e6b9d92aca4b8259fb
+m
+=src/main/kotlin/com/shryne/kmap/processor/kmap/check/Check.kt,6/f/6fa7bbce46e38f3ad473234d31361d055d7464b9
