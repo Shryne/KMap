@@ -6,6 +6,7 @@ import com.shryne.kmap.processor.kmap.check.PropertyExistCheck
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
+import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.DeclaredType
 import javax.tools.Diagnostic
@@ -64,8 +65,7 @@ internal class MapPartnerProcessor : AbstractProcessor() {
                                             it,
                                             source,
                                             target,
-                                            processingEnv.typeUtils,
-                                            processingEnv.messager
+                                            processingEnv.typeUtils
                                         )
                                     }
 
@@ -90,8 +90,7 @@ internal class MapPartnerProcessor : AbstractProcessor() {
                                             Clazz(source as TypeElement),
                                             Clazz(target),
                                             kMaps,
-                                            packageName,
-                                            processingEnv.messager
+                                            packageName
                                         ).writeTo(processingEnv.filer)
                                     }
                                 }

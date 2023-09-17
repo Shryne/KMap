@@ -14,8 +14,7 @@ internal class MapPartner(
     private val source: Clazz,
     private val target: Clazz,
     private val kMaps: List<KMap>,
-    private val packageName: String,
-    private val messager: Messager
+    private val packageName: String
 ) {
     fun writeTo(filer: Filer) {
         writeTo(

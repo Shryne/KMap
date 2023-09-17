@@ -24,20 +24,13 @@ internal class KMap(
     val sourceProperty: Element,
     private val sourceClass: Element,
     private val targetClass: Element,
-    private val types: Types,
-    private val messager: Messager
+    private val types: Types
 ) {
     /**
      * The annotation containing the information about the mapping of a
      * property.
      */
-    private val kMap: KMap =
-        sourceProperty.getAnnotation(KMap::class.java).apply {
-            messager.printMessage(
-                Diagnostic.Kind.NOTE,
-                "Source property is: $sourceProperty"
-            )
-        }
+    private val kMap: KMap = sourceProperty.getAnnotation(KMap::class.java)
 
     private val propertyName: String =
         sourceProperty.simpleName.toString().run {
