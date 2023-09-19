@@ -19,6 +19,25 @@ class BasicTest {
         )
     }
 
+    @Test
+    fun javaPartner() {
+        assertMappingFiles(
+            "/basic/java_partner",
+            Kotlin("Scalar"),
+            Java("Value")
+        )
+    }
+
+    @Test
+    fun sameClassName() {
+        assertMappingFiles(
+            "/basic/same_class_name",
+            listOf("SUserMapping", "TUserMapping"),
+            Kotlin("/other/User"),
+            Kotlin("User")
+        )
+    }
+
     @Nested
     inner class Errors {
         @Test

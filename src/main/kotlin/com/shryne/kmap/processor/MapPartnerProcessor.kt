@@ -65,7 +65,7 @@ internal class MapPartnerProcessor : AbstractProcessor() {
                     val checks = Checks(
                         kMaps.flatMap {
                             listOf(
-                                CompatibleTypes(it),
+                                CompatibleTypes(it, processingEnv.typeUtils),
                                 CorrectKMapSetting(it.annotated),
                                 PropertyExists(it, Clazz(target))
                             )

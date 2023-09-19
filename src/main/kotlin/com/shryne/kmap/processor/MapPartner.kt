@@ -19,7 +19,7 @@ internal class MapPartner(
             kMaps.filter { it.sourceToTargetImport != null }
                 .map { it.sourceToTargetImport!! },
             kMaps.map { it.sourceToTargetAssignment() },
-            (if (source.simpleName == target.simpleName) "S" else "") + "${source.simpleName}Mapping",
+            (if (source.simpleName == target.simpleName) "T" else "") + "${source.simpleName}Mapping",
             filer,
             source,
             target

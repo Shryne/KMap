@@ -3,6 +3,9 @@ package com.shryne.kmap.processor.check.kmap
 import com.shryne.kmap.processor.KMap
 import com.shryne.kmap.processor.check.Check
 import javax.annotation.processing.Messager
+import javax.lang.model.type.DeclaredType
+import javax.lang.model.type.TypeMirror
+import javax.lang.model.util.Types
 import javax.tools.Diagnostic
 
 /**
@@ -38,11 +41,35 @@ import javax.tools.Diagnostic
  * ```
  * `getX$annotations` is a static method that holds the annotation.
  */
-internal class CompatibleTypes(private val kMap: KMap) : Check {
+internal class CompatibleTypes(
+    private val kMap: KMap,
+    private val typeUtils: Types
+) : Check {
     private val sourceType = kMap.sourceProperty?.asType()
     private val targetType = kMap.targetProperty?.asType()
 
-    override fun hasErrors(): Boolean = sourceType != targetType
+    override fun hasErrors(): Boolean = !areTypesSame(sourceType, targetType)
+
+    private fun areTypesSame(type1: TypeMirror?, type2: TypeMirror?): Boolean {
+        // Check if the raw (erased) types are the same
+        if (typeUtils.isSameType(typeUtils.erasure(type1), typeUtils.erasure(type2))) {
+            // Check if both types are DeclaredTypes (i.e., they might have generics)
+            if (type1 is DeclaredType && type2 is DeclaredType) {
+                val typeArgs1 = type1.typeArguments
+                val typeArgs2 = type2.typeArguments
+
+                // If their type arguments have different sizes,
+                // they can't be the same
+                if (typeArgs1.size != typeArgs2.size) return false
+
+                // Recursively check the type arguments
+                for (i in typeArgs1.indices) {
+                    if (!areTypesSame(typeArgs1[i], typeArgs2[i])) return false
+                }
+            }
+        }
+        return true
+    }
 
     override fun printErrors(messager: Messager) {
         messager.printMessage(
