@@ -49,5 +49,20 @@ class BasicTest {
                     "KMap.thisSet are set."
             )
         }
+
+        @Test
+        fun incompatibleTypes() {
+            assertError(
+                "/basic/error/incompatible_types",
+                listOf(
+                    Kotlin("Source"),
+                    Kotlin("Target")
+                ),
+                emptyList(),
+                "The types of the properties that are mapped with KMap must be " +
+                    "compatible. The source type is int and the target type " +
+                    "is java.lang.String.",
+            )
+        }
     }
 }

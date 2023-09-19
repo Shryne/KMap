@@ -12,7 +12,7 @@ import javax.tools.Diagnostic
  *
  * @param sourceProperty The property that is annotated with [KMap].
  */
-internal class KMapSettingCheck(private val sourceProperty: Element) : Check {
+internal class CorrectKMapSetting(private val sourceProperty: Element) : Check {
     private val errors by lazy {
         val errors = mutableListOf<String>()
         val annotation = sourceProperty.getAnnotation(KMap::class.java)

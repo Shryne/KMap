@@ -3,7 +3,6 @@ package com.shryne.kmap.processor
 import com.shryne.kmap.annotations.KMap
 import java.util.*
 import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
 import javax.lang.model.util.Types
 
 /**
@@ -11,13 +10,15 @@ import javax.lang.model.util.Types
  * Note that this class can be used both ways: annotated property -> property
  * and property -> annotated property.
  *
- * @param sourceProperty The property that contains the value.
+ * @param annotated The annotated element. Note that Kotlin generates a separate
+ * method for the annotation. Therefore, the annotated element is not the
+ * actual property.
  * @param sourceClass The class of the source property.
  * @param targetClass The class of the target property that will get the value.
  * @param types The utility class necessary to operate on Types.
  */
 internal class KMap(
-    val sourceProperty: Element,
+    val annotated: Element,
     private val sourceClass: Element,
     private val targetClass: Element,
     private val types: Types
@@ -26,41 +27,69 @@ internal class KMap(
      * The annotation containing the information about the mapping of a
      * property.
      */
-    private val kMap: KMap = sourceProperty.getAnnotation(KMap::class.java)
+    private val kMap: KMap = annotated.getAnnotation(KMap::class.java)
 
+    /**
+     * The name of the property that is annotated with [KMap].
+     * The suffix and "get" needs to be removed, because Kotlin generates a
+     * special static method as a holder for the annotation.
+     * Example:
+     * ```kotlin
+     * @MapPartner(B::class, packageName = "somepackage"))
+     * class A {
+     *   @KMap
+     *   private var x: Int = 0
+     * }
+     * ```
+     * The translated byte code looks like this:
+     * ```java
+     * @kotlin.Metadata(...)
+     * @MapPartner(value = B.class, packageName = "basic")
+     * public final class Source {
+     *   private int x: Int = 0;
+     *
+     *   public final int getX(): int { return x; }
+     *   public final void setX(int x) { this.x = x; }
+     *
+     *   @com.shryne.kmap.annotations.KMap
+     *   @java.lang.Deprecated
+     *   public static void getX$annotations() {}
+     *
+     *   // ...
+     * }
+     * ```
+     * `getX$annotations` is a static method that holds the annotation.
+     */
     private val propertyName: String =
-        sourceProperty.simpleName.toString().run {
-            if (sourceProperty.kind == ElementKind.METHOD) {
-                removeSuffix("\$annotations")
-                    .removePrefix("get")
-                    .replaceFirstChar {
-                        it.lowercase(Locale.getDefault())
-                    }
-            } else {
-                this
-            }
+        annotated.simpleName.toString().run {
+            removeSuffix("\$annotations")
+                .removePrefix("get")
+                .replaceFirstChar {
+                    it.lowercase(Locale.getDefault())
+                }
         }
 
-    private val sourceGet: String = propertyAccessName(
+
+    private val sourceGetName: String = propertyAccessName(
         propertyName,
         kMap.thisValue,
         kMap.thisGet,
         kMap.thisSet
     )
 
-    val sourceSet: String = propertyAccessName(
+    val sourceSetName: String = propertyAccessName(
         propertyName,
         kMap.thisValue,
         kMap.thisSet,
         kMap.thisSet
     )
-    private val targetGet: String = propertyAccessName(
+    private val targetGetName: String = propertyAccessName(
         propertyName,
         kMap.value,
         kMap.targetGet,
         kMap.targetSet
     )
-    private val targetSet: String = propertyAccessName(
+    private val targetSetName: String = propertyAccessName(
         propertyName,
         kMap.value,
         kMap.targetSet,
@@ -94,7 +123,7 @@ internal class KMap(
     val sourceToTargetImport: Pair<String, String>? = importPackage?.run {
         this to "to${
             targetClass.enclosedElements.find {
-                it.simpleName.toString() == targetGet.takeWhile { it != '.' }
+                it.simpleName.toString() == targetGetName.takeWhile { it != '.' }
             }!!.asType()!!.run {
                 types.asElement(this)?.simpleName
             }
@@ -104,18 +133,26 @@ internal class KMap(
     val targetToSourceImport: Pair<String, String>? = mapPartner()?.run {
         packageName to "to${
             sourceClass.enclosedElements.find {
-                propertyName == sourceGet.takeWhile { it != '.' }
+                propertyName == sourceGetName.takeWhile { it != '.' }
             }!!.asType()!!.run {
                 types.asElement(this)?.simpleName
             }
         }"
     }
 
-    private val targetProperty: Element
+    val sourceProperty: Element?
+        get() = sourceClass.enclosedElements.find {
+            it.simpleName.toString() == propertyName
+        }
+
+    /**
+     * @return The target property or null if it doesn't exist.
+     */
+    val targetProperty: Element?
         get() {
             return targetClass.enclosedElements.find {
-                it.simpleName.toString() == sourceSet
-            }!!
+                it.simpleName.toString() == sourceSetName
+            }
         }
 
     /**
@@ -123,14 +160,14 @@ internal class KMap(
      * (target = source).
      */
     fun sourceToTargetAssignment(): String =
-        assignment(sourceGet, targetSet, targetGet)
+        assignment(sourceGetName, targetSetName, targetGetName)
 
     /**
      * @return The assignment from the target property to the source property
      * (source = target).
      */
     fun targetToSourceAssignment(): String =
-        assignment(targetGet, sourceSet, sourceGet)
+        assignment(targetGetName, sourceSetName, sourceGetName)
 
     /**
      * Returns the assignment statement. This method distinguishes between
@@ -168,7 +205,7 @@ internal class KMap(
      */
     private fun hasMapPartner(): Boolean =
         sourceClass.enclosedElements.find {
-            it.simpleName.toString() == sourceGet
+            it.simpleName.toString() == sourceGetName
         }?.asType()?.run {
             types.asElement(this)
                 ?.getAnnotation(AMapPartner::class.java) != null
@@ -180,7 +217,7 @@ internal class KMap(
      */
     private fun mapPartner(): AMapPartner? =
         sourceClass.enclosedElements.find {
-            it.simpleName.toString() == sourceGet
+            it.simpleName.toString() == sourceGetName
         }?.asType()?.run {
             types.asElement(this)?.getAnnotation(AMapPartner::class.java)
         }

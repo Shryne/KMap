@@ -1,8 +1,9 @@
 package com.shryne.kmap.processor
 
 import com.shryne.kmap.processor.check.Checks
-import com.shryne.kmap.processor.check.kmap.KMapSettingCheck
-import com.shryne.kmap.processor.check.kmap.PropertyExistCheck
+import com.shryne.kmap.processor.check.kmap.CompatibleTypes
+import com.shryne.kmap.processor.check.kmap.CorrectKMapSetting
+import com.shryne.kmap.processor.check.kmap.PropertyExists
 import com.shryne.kmap.processor.check.mappartner.MapPartnerContainsParameter
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.ProcessingEnvironment
@@ -64,20 +65,14 @@ internal class MapPartnerProcessor : AbstractProcessor() {
                     val checks = Checks(
                         kMaps.flatMap {
                             listOf(
-                                KMapSettingCheck(
-                                    it.sourceProperty
-                                ),
-                                PropertyExistCheck(
-                                    it,
-                                    Clazz(target)
-                                )
+                                CompatibleTypes(it),
+                                CorrectKMapSetting(it.annotated),
+                                PropertyExists(it, Clazz(target))
                             )
                         }
                     )
                     if (checks.hasErrors()) {
-                        checks.printErrors(
-                            processingEnv.messager
-                        )
+                        checks.printErrors(processingEnv.messager)
                     } else {
                         MapPartner(
                             processingEnv.typeUtils,
