@@ -1,9 +1,9 @@
 package com.shryne.kmap.processor
 
-import com.shryne.kmap.processor.kmap.KMap
-import com.shryne.kmap.processor.kmap.check.Checks
-import com.shryne.kmap.processor.kmap.check.KMapSettingCheck
-import com.shryne.kmap.processor.kmap.check.PropertyExistCheck
+import com.shryne.kmap.processor.check.Checks
+import com.shryne.kmap.processor.check.kmap.KMapSettingCheck
+import com.shryne.kmap.processor.check.kmap.PropertyExistCheck
+import com.shryne.kmap.processor.check.mappartner.MapPartnerContainsParameter
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
@@ -36,19 +36,17 @@ internal class MapPartnerProcessor : AbstractProcessor() {
                 val target = mp.target
                 val packageName = mp.packageName
 
-                if (packageName == null) {
-                    processingEnv.messager.printMessage(
-                        Diagnostic.Kind.ERROR,
-                        "MapPartner doesn't contain parameter packageName."
-                    )
+                val mpCheck = MapPartnerContainsParameter(source, mp)
+                if (mpCheck.hasErrors()) {
+                    mpCheck.printErrors(processingEnv.messager)
                 } else {
                     processingEnv.messager.printMessage(
                         Diagnostic.Kind.NOTE,
-                        "Target type is: ${target.simpleName}. Source type is ${source.simpleName}."
+                        "Target type is: ${target.simpleName}. " +
+                            "Source type is ${source.simpleName}."
                     )
 
-                    val annotated =
-                        source.enclosedElements.filter {
+                    val annotated = source.enclosedElements.filter {
                             it.getAnnotation(
                                 KMapAnnotation::class.java
                             ) != null
@@ -86,7 +84,7 @@ internal class MapPartnerProcessor : AbstractProcessor() {
                             Clazz(source as TypeElement),
                             Clazz(target),
                             kMaps,
-                            packageName
+                            packageName!!
                         ).writeTo(processingEnv.filer)
                     }
                 }

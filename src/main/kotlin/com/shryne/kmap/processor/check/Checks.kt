@@ -1,4 +1,4 @@
-package com.shryne.kmap.processor.kmap.check
+package com.shryne.kmap.processor.check
 
 import javax.annotation.processing.Messager
 

@@ -1,14 +1,10 @@
-package com.shryne.kmap.processor.kmap
+package com.shryne.kmap.processor
 
 import com.shryne.kmap.annotations.KMap
 import java.util.*
-import javax.annotation.processing.Messager
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.util.Types
-import javax.tools.Diagnostic
-
-typealias AMapPartner = com.shryne.kmap.annotations.MapPartner
 
 /**
  * A decorator for [KMap] to create the assignments for the annotated property.

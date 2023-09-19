@@ -1,6 +1,7 @@
-package com.shryne.kmap.processor.kmap.check
+package com.shryne.kmap.processor.check.kmap
 
 import com.shryne.kmap.annotations.KMap
+import com.shryne.kmap.processor.check.Check
 import javax.annotation.processing.Messager
 import javax.lang.model.element.Element
 import javax.tools.Diagnostic
