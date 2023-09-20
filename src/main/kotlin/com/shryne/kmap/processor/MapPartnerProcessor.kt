@@ -1,9 +1,9 @@
 package com.shryne.kmap.processor
 
 import com.shryne.kmap.processor.check.Checks
-import com.shryne.kmap.processor.check.kmap.CompatibleTypes
 import com.shryne.kmap.processor.check.kmap.CorrectKMapSetting
-import com.shryne.kmap.processor.check.kmap.PropertyExists
+import com.shryne.kmap.processor.check.kmap.AccessorsExist
+import com.shryne.kmap.processor.check.kmap.CompatibleTypes
 import com.shryne.kmap.processor.check.mappartner.MapPartnerContainsParameter
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.ProcessingEnvironment
@@ -67,7 +67,7 @@ internal class MapPartnerProcessor : AbstractProcessor() {
                             listOf(
                                 CompatibleTypes(it, processingEnv.typeUtils),
                                 CorrectKMapSetting(it.annotated),
-                                PropertyExists(it, Clazz(target))
+                                AccessorsExist(it, Clazz(target))
                             )
                         }
                     )

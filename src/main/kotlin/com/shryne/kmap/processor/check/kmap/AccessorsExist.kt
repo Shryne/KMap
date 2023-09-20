@@ -8,30 +8,33 @@ import javax.tools.Diagnostic
 
 typealias KMapAnnotation = com.shryne.kmap.annotations.KMap
 
+
 /**
- * Checks if the property that is given through [KMapAnnotation.value] exists.
+ * Checks if the accessors that are used for the mapping exist.
  */
-internal class PropertyExists(
+internal class AccessorsExist(
     private val kMap: KMap,
     private val targetClass: Clazz
 ) : Check {
     private val errors by lazy {
         val errors = mutableListOf<String>()
-        val annotation = kMap.annotated.getAnnotation(KMapAnnotation::class.java)
+        val annotation = kMap.annotated.getAnnotation(
+            KMapAnnotation::class.java
+        )
         if (annotation == null) {
             errors.add("The given source property must be annotated with KMap.")
         } else {
-                val result = targetClass.properties.find {
-                    it.simpleName.toString() == kMap.sourceSetName
-                }
-                if (result == null) {
-                    errors.add(
-                        "Couldn't find targetProperty in $targetClass. Enclosed " +
-                            "elements are: " +
-                            "${targetClass.properties.joinToString(", ")}. " +
-                            "Expected name was: ${kMap.sourceSetName}."
-                    )
-                }
+            val result = targetClass.properties.find {
+                it.simpleName.toString() == kMap.sourceSetName
+            }
+            if (result == null) {
+                errors.add(
+                    "Couldn't find targetProperty in $targetClass. Enclosed " +
+                        "elements are: " +
+                        "${targetClass.properties.joinToString(", ")}. " +
+                        "Expected name was: ${kMap.sourceSetName}."
+                )
+            }
 
         }
         errors

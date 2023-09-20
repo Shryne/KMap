@@ -3,6 +3,8 @@ package com.shryne.kmap.processor
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import javax.lang.model.element.Element
+import javax.lang.model.element.ElementKind
+import javax.lang.model.element.ExecutableElement
 import javax.lang.model.element.TypeElement
 
 typealias AMapPartner = com.shryne.kmap.annotations.MapPartner

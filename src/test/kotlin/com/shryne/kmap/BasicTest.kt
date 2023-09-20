@@ -29,6 +29,24 @@ class BasicTest {
     }
 
     @Test
+    fun multiplePropertiesSameName() {
+        assertMappingFiles(
+            "/basic/multiple_properties_same_name",
+            Kotlin("Client"),
+            Kotlin("User")
+        )
+    }
+
+    @Test
+    fun accessorBased() {
+        assertMappingFiles(
+            "/basic/accessor_based",
+            Kotlin("Scalar"),
+            Java("Value")
+        )
+    }
+
+    @Test
     fun sameClassName() {
         assertMappingFiles(
             "/basic/same_class_name",
@@ -50,8 +68,8 @@ class BasicTest {
                 ),
                 emptyList(),
                 "Couldn't find targetProperty in " +
-                    "basic.error.no_such_property.Target. Enclosed elements are: "
-                    + "a. Expected name was: x."
+                    "basic.error.no_such_property.Target. Enclosed elements " +
+                    "are: a. Expected name was: x."
             )
         }
 
