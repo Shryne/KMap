@@ -51,6 +51,10 @@ internal class CompatibleTypes(
     override fun hasErrors(): Boolean = !areTypesSame(sourceType, targetType)
 
     private fun areTypesSame(type1: TypeMirror?, type2: TypeMirror?): Boolean {
+        // The type can currently be null, if it targets an accessor.
+        if (type1 == null || type2 == null) return true
+        if (typeUtils.isSameType(type1, type2)) return true
+
         // Check if the raw (erased) types are the same
         if (typeUtils.isSameType(typeUtils.erasure(type1), typeUtils.erasure(type2))) {
             // Check if both types are DeclaredTypes (i.e., they might have generics)
@@ -68,7 +72,7 @@ internal class CompatibleTypes(
                 }
             }
         }
-        return true
+        return false
     }
 
     override fun printErrors(messager: Messager) {
